@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration>
+    <appender name="STDOUT" class="org.apache.log4j.ConsoleAppender">
+        <param name="Encoding" value="UTF-8" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%-5p %d{MM-dd HH:mm:ss,SSS} %m (%F:%L) \n" />
+        </layout>
+    </appender>
+    <appender name="FILE" class="org.apache.log4j.RollingFileAppender">
+        <param name="File" value="D:/javaEE/yjzFirstProject/log/app.log"/> <!-- 注意这里添加了具体的文件名 -->
+        <param name="MaxFileSize" value="10MB" />
+        <param name="MaxBackupIndex" value="10" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%-5p %d{MM-dd HH:mm:ss,SSS} %m (%F:%L) \n" />
+        </layout>
+    </appender>
+    <logger name="java.sql">
+        <level value="debug" />
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" /> <!-- 将日志输出到文件 -->
+    </logger>
+    <logger name="org.apache.ibatis">
+        <level value="info" />
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" /> <!-- 将日志输出到文件 -->
+    </logger>
+    <root>
+        <level value="debug" />
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" /> <!-- 将根日志器的日志也输出到文件 -->
+    </root>
+</log4j:configuration>

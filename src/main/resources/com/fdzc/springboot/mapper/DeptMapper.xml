@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：最主要的作用就是绑定mapper.xml与对应那个Mapper接口的关系，要求接口名称为：全限定名 -->
+<mapper namespace="com.fdzc.springboot.mapper.DeptMapper">
+    <resultMap id="userResultMap" type="com.fdzc.springboot.vo.DeptVo">
+        <result property="id" column="dept_id"></result>
+        <result property="deptName" column="dept_name"/>
+        <result property="description" column="description"/>
+        <result property="address" column="address"/>
+        <collection property="users" ofType="com.fdzc.springboot.entity.User">
+            <result property="id" column="id"></result>
+            <result property="userName" column="user_name"/>
+            <result property="password" column="password"/>
+            <result property="gender" column="gender"/>
+            <result property="birthday" column="birthday"/>
+            <result property="dept_id" column="dept_id"/>
+        </collection>
+    </resultMap>
+    <resultMap id="usersResultMap" type="com.fdzc.springboot.vo.DeptVo">
+        <result property="id" column="dept_id"></result>
+        <result property="deptName" column="dept_name"/>
+        <result property="description" column="description"/>
+        <result property="address" column="address"/>
+        <collection property="users" ofType="com.fdzc.springboot.entity.User">
+            <result property="id" column="id"></result>
+            <result property="userName" column="user_name"/>
+            <result property="password" column="password"/>
+            <result property="gender" column="gender"/>
+            <result property="birthday" column="birthday"/>
+            <result property="dept_id" column="dept_id"/>
+        </collection>
+    </resultMap>
+    <resultMap id="userAllResultMap" type="com.fdzc.springboot.vo.DeptVo">
+        <result property="id" column="dept_id"></result>
+        <result property="deptName" column="dept_name"/>
+        <result property="description" column="description"/>
+        <result property="address" column="address"/>
+        <collection property="users" ofType="com.fdzc.springboot.entity.User">
+            <result property="id" column="id"></result>
+            <result property="userName" column="user_name"/>
+            <result property="password" column="password"/>
+            <result property="gender" column="gender"/>
+            <result property="birthday" column="birthday"/>
+            <result property="dept_id" column="dept_id"/>
+        </collection>
+    </resultMap>
+    <!-- 查询所有部门 -->
+    <select id="selectAll" resultType="com.fdzc.springboot.entity.Dept">
+        select * from department
+    </select>
+
+    <!-- 根据ID查询部门 -->
+    <select id="selectById" resultType="com.fdzc.springboot.entity.Dept">
+        select * from department where id=#{id}
+    </select>
+
+    <!-- 插入新部门 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into department(id,dept_name,description,address) values(#{id},#{deptName},#{description},#{address})
+    </insert>
+
+    <insert id="insertBatch">
+        insert into department(id,dept_name,description,address)
+        values
+        <foreach collection="depts" item="department" separator=",">
+            (#{department.id},#{department.deptName}, #{department.description}, #{department.address})
+        </foreach>
+    </insert>
+
+    <!-- 更新部门信息 -->
+    <update id="update">
+        update department set id=#{dept.id},dept_name=#{dept.deptName}, description=#{dept.description}, address=#{dept.address} where id=#{id}
+    </update>
+
+    <!-- 删除部门 -->
+    <delete id="delete">
+        delete from department where id=#{id}
+    </delete>
+
+    <delete id="deleteBatch">
+        delete from department where id in
+        <foreach collection="deptIds" item="id" index="index" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="findDeptUser" resultMap="userResultMap">
+        select
+            u.id,
+            user_name,
+            gender,
+            password,
+            birthday,
+            d.id AS dept_id,
+            dept_name,
+            description,
+            address
+        from
+            department d
+                left join
+            user u
+            on
+                d.id = u.dept_id
+        where
+            d.id=#{id};
+    </select>
+    <select id="findDeptUsers" resultMap="usersResultMap">
+        select
+        u.id,
+        user_name,
+        gender,
+        password,
+        birthday,
+        d.id AS dept_id,
+        dept_name,
+        description,
+        address
+        from
+        department d
+        left join
+        user u
+        on
+        d.id = u.dept_id
+        where
+        d.id in
+        <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+    <select id="findDeptUserAll" resultMap="userAllResultMap">
+        select
+            u.id,
+            user_name,
+            gender,
+            password,
+            birthday,
+            d.id AS dept_id,
+            dept_name,
+            description,
+            address
+        from
+            department d
+                left join
+            user u
+            on
+                d.id = u.dept_id
+    </select>
+</mapper>
